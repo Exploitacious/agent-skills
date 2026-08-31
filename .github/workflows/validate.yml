@@ -1,0 +1,49 @@
+name: validate
+
+# Validate every skill against the agentskills.io reference validator on push
+# and PR, and build a per-skill zip when a version tag is pushed. skills-ref is
+# pinned because it is a 0.x alpha: an unpinned bump could change validation
+# rules under us and fail CI on unchanged skills.
+
+on:
+  push:
+    branches: ["**"]
+    tags: ["v*"]
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install validator
+        run: pip install "skills-ref==0.1.1"
+      - name: Validate skills
+        run: |
+          fail=0
+          for d in skills/*/; do
+            echo "== validate ${d} =="
+            agentskills validate "${d}" || fail=1
+          done
+          exit $fail
+
+  package:
+    needs: validate
+    if: startsWith(github.ref, 'refs/tags/v')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Zip each skill
+        run: |
+          mkdir -p dist
+          for d in skills/*/; do
+            name=$(basename "${d}")
+            (cd skills && zip -r "../dist/${name}.zip" "${name}")
+          done
+      - uses: actions/upload-artifact@v4
+        with:
+          name: skills-zips
+          path: dist/*.zip

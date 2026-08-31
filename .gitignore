@@ -1,0 +1,21 @@
+# Secrets
+.env
+*.key
+credentials.*
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+*~
+
+# Agent tooling
+.claude/
+
+# CI build output
+dist/

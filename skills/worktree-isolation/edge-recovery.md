@@ -1,0 +1,30 @@
+# Edge recovery
+
+Read this when a worktree edge case has already bitten and you need the salvage steps, or when planning a merge of several parallel branches.
+
+## Salvage an agent that escaped into the main checkout
+When an agent wrote uncommitted edits into the shared main checkout:
+
+1. Stop the agent.
+2. Stash its files with the include-untracked flag: `git stash push -u <its files>`.
+3. Move the checkout back to a clean main: `git checkout main && git pull --ff-only`.
+4. Create the branch it should have used: `git checkout -b <branch>`.
+5. Restore its work: `git stash pop`.
+6. Verify before trusting every file it wrote. Escape correlates with improvisation, so audit the content, do not just merge it.
+
+If a post-salvage `git pull --ff-only` fails with "not possible to fast-forward," leaked commits are the cause. `git reset --hard origin/main` is safe when the remote squash carries the same diff.
+
+## The folded shared signature
+When both sides of a conflict contain an identical line block, such as a common function signature or a `PRIMARY KEY (...)\n);` tail, git folds that block into the common region and splits one side's definition from its body. A naive "keep both" then yields broken code: a definition with no body, or a table that never closes. Physically reorder and rewrite the whole region; do not just delete the conflict markers.
+
+## When the merge tail dominates the budget
+Parallel builds are cheap; landing them can be the expensive part. One round of five parallel workers built in about 90 minutes and took about five hours of serial rebases across roughly 50 conflict hunks to land. When features stack on the same anchors, either serialize the builds, or give each worker its own new module and defer the central wiring, such as schema registration and orchestration call sites, to one thin integration commit you write after all lanes land. Disjoint lanes parallelize for free; shared anchors do not.
+
+## Recover a hijacked HEAD
+When HEAD moved in a checkout another agent is also using:
+
+1. Clean the contested index for the other agent: `git reset`, then `git checkout -- <shared files>`.
+2. Do your own commit in an isolated throwaway worktree: `git worktree add -b <branch> <scratch> origin/main`.
+3. Redo your tracked edits there and copy the untracked new files over. Untracked files follow branch switches, so they are safe to move.
+
+Base the worktree on the remote main, not local main. Local main is often stale behind merged PRs.

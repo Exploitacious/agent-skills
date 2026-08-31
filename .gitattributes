@@ -1,0 +1,11 @@
+# Normalize line endings across Windows and Linux contributors
+* text=auto
+
+*.sh text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+
+*.zip binary
