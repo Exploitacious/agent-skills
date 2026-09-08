@@ -32,3 +32,13 @@ Guideline shape, not a gate. A missing section flags the audit, it does not abor
 8. Report-back format, every field named, as headings and bullets rather than prose, so the result maps one-to-one to your audit.
 
 Keep brief-authoring under a fifth of the expected subagent time. Past that you are in reviewer-fix territory, so do it yourself.
+
+## On Codex and OpenCode
+
+The eight-section brief shape and the stakes-mode framing are provider-agnostic
+prose; only the delivery differs. On Codex, the brief is the `message` argument
+to `spawn_agent` (which takes only `task_name` and `message`), so everything the
+lane needs must be in that one string; keep a per-type brief scaffold on disk and paste it in. On OpenCode, the
+brief is the prompt handed to a typed subagent (an agent definition file). The verbatim-API-shape rule, the named-principle rule, and
+the escalation grant apply identically on all three; the doctrine you cite is
+whatever shared instructions every provider reads through `AGENTS.md`.

@@ -36,3 +36,15 @@ Default to the general, full-tool agent type. Narrow or excerpt-reading types mi
 Under the three conditions, a foreman turns a solo estimate into roughly a fifth to a tenth of the wall-clock. The ceiling is your brief-and-audit throughput, not the subagent count: one foreman runs two or three subagents per parallel round, and rounds chain. Report the payoff as a deliverable count with a solo-versus-foreman line, since hours imply the sequential work delegation removes. Worked examples and the viability rules are in `patterns-and-sizing.md`.
 
 Keep brief-authoring under a fifth of the expected subagent time. Past that, the scope is too small for the pattern: do it yourself, or combine items into one heavier lane.
+
+## On Codex and OpenCode
+
+The delegate-or-not gate and the conversion-factor math are provider-agnostic;
+the pattern menu narrows on the other runtimes. Codex has one spawn shape
+(`spawn_agent`) and no Workflow tool, so the five patterns collapse to "spawn or
+not": parallel fan-out is manual, sequential spawns, and a registry-driven
+catalog run has no native primitive. OpenCode gives typed subagents
+(agent definition files) but also has no Workflow tool, so dynamic pipelines are
+hand-orchestrated. The load-bearing consequence: a task that genuinely needs a
+dynamic workflow or heavy typed fan-out stays on Claude, where the primitives
+exist; size accordingly before choosing the provider.
