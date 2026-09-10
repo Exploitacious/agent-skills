@@ -39,6 +39,14 @@ Args can arrive undefined or stringified at the script even when the call passed
 
 Runs are resumable within the same session: completed agent calls return cached results, edited or new calls run live. The tool persists each run's script to a file and returns the path. To iterate, edit that file and re-invoke with the path and the run id rather than resending the whole script. The same script and same args give a full cache hit.
 
+## Keep structured returns small
+
+A `schema` return that is oversized or malformed is rejected by the validation layer, and the runtime retries a fixed number of times (five) then gives up, so a lane that stuffs its evidence into the return has its findings dropped while the real work sits on disk. Give every free-text field a generous `maxLength` (1500 or more, findings text 1000 or more), and tell the agent to stay well under it, since agents overshoot a stated cap by 5 to 15 percent and the retry loop never shrinks the text. Cap the number of findings (around ten), push the long form to a file, and return its path. Keep any `pr` or `verdict` field tiny so that if a return does die you can recover it from the agent's last tool call in the transcript. When a lane returns null or a placeholder, read its on-disk artifact before concluding it found nothing.
+
+## The WebSearch budget is shared
+
+WebSearch has a per-run call cap (about 200) that looks session-level, not per-agent, so a few parallel research lanes exhaust it almost at once and then degrade silently to fetching search-result HTML, which thins source quality and burns turns per lane rediscovering the fallback. Set an explicit per-lane search ceiling in each research prompt (a dozen or two per research lane, low single digits for a critic or refuter) so the whole fan-out stays under the cap, and write the fallback into the shared preamble so no lane has to rediscover it. Expect anything sourced from search snippets to need a primary-source verify pass.
+
 ## Deep research
 
 Claude Code ships a built-in deep-research workflow: it fans out web search, cross-checks each claim, and returns a cited report with unsupported claims filtered out. Use it for live web research. Reach for a custom workflow only when the research shape needs something it does not cover.

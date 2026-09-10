@@ -14,6 +14,11 @@ When an agent wrote uncommitted edits into the shared main checkout:
 
 If a post-salvage `git pull --ff-only` fails with "not possible to fast-forward," leaked commits are the cause. `git reset --hard origin/main` is safe when the remote squash carries the same diff.
 
+## Before merging parallel branches: the dirty-overlap check
+A worktree branch lands only as a commit, so brief every lane to make its own commit on its branch (one clean conventional commit) and report the branch and path. A "do not commit, the parent merges" brief just leaves every worktree dirty for the parent to commit by hand.
+
+A shared checkout with concurrent sessions always has someone else's dirty files, and `git merge` refuses with "local changes would be overwritten" when the branch touches one of them. Before merging, intersect the branch's changed files with the main checkout's uncommitted set: `git diff --name-only main...<branch>` against `git status --short`. For any file in both, reset it on the branch to main's version before merging; the branch's own commit message stays intact. A derived file such as a generated index or a lockfile is better parked and regenerated after the merge than merged.
+
 ## The folded shared signature
 When both sides of a conflict contain an identical line block, such as a common function signature or a `PRIMARY KEY (...)\n);` tail, git folds that block into the common region and splits one side's definition from its body. A naive "keep both" then yields broken code: a definition with no body, or a table that never closes. Physically reorder and rewrite the whole region; do not just delete the conflict markers.
 
