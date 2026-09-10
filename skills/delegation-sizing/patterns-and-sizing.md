@@ -28,7 +28,7 @@ Under the three conditions (more than a day solo, parallelizes, briefable), a so
 When it does not pay: sub-day work (overhead alone is thirty-plus minutes per subagent), tightly sequential steps (no fan-out to gain), and single-threaded synthesis (one mind, and the subagent is not faster than you).
 
 ## Report viability, honestly
-For each scoped item, state whether delegation is viable (yes if all three conditions hold, no if any fails materially, partial if some sub-tasks delegate and others do not), name the pattern, and give the foreman estimate. Partial is the common real case: name which sub-tasks delegate. Inflated delegation math costs trust when the conditions did not actually hold, so keep the accounting honest.
+For each scoped item, state whether delegation is viable (yes if all three conditions hold, no if any fails materially, partial if some sub-tasks delegate and others do not), name the pattern, and give the foreman estimate. Those three conditions govern wall-clock viability. A lead on a costlier tier than its workers may also delegate one substantive, briefable lane for cost, with no parallelism claimed; report that as "cost-only" rather than "yes", and only when the saving clears the briefing, audit, and spawn overhead. Partial is the common real case: name which sub-tasks delegate. Inflated delegation math costs trust when the conditions did not actually hold, so keep the accounting honest.
 
 ## Brief-time budget
 Brief-authoring should stay under a fifth of the expected subagent time.

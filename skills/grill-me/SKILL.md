@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Use at intake when a request, plan, or design has decisions the user has not made, before building anything non-trivial, or when the user says grill me, stress-test this, or poke holes in this. Interviews the user in rounds until nothing is left open.
+description: Use at intake when a request, plan, or design still has decisions the user has not made, or when the user says grill me, stress-test this, or poke holes in this. Not for work whose plan is already approved. Interviews the user in rounds until nothing is left open.
 ---
 
 # Grill me
