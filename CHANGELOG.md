@@ -15,8 +15,9 @@ All notable changes to this repo are recorded here. Format follows Keep a Change
   restarts a live service, since a subagent can end between any two tool calls:
   lane-death-safe single-payload mutations and foreground long steps.
 - `dynamic-workflows`: `authoring-workflows.md` now covers keeping structured
-  `agent()` returns under the validation cap (long form to a file) and setting a
-  per-lane WebSearch ceiling under the shared budget.
+  `agent()` returns under the validation cap (bound counts with `maxItems`, long
+  form to a file, and reject stub returns) and setting a per-lane WebSearch
+  ceiling under the shared budget.
 
 ## [0.1.3] - 2026-09-10
 
