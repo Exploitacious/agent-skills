@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Interview the user in rounds until a plan, decision, or idea has no open questions left. Use at intake when a request has decisions the user has not made, before building anything non-trivial, or when the user says grill me, stress-test this, or poke holes in this.
+description: Use at intake when a request, plan, or design has decisions the user has not made, before building anything non-trivial, or when the user says grill me, stress-test this, or poke holes in this. Interviews the user in rounds until nothing is left open.
 ---
 
 # Grill me
@@ -11,13 +11,13 @@ Interview the user until you share one understanding of what they want. Map the 
 
 Work the tree in rounds. The frontier is every decision whose prerequisites are settled: the questions you can ask now without guessing at answers you have not heard. Ask the whole frontier in one round, then wait. A question whose answer depends on another question still open in this round belongs to a later round.
 
-Each round of answers reshapes the tree: settled decisions push the frontier outward and unblock what depended on them. Recompute and ask the next round. The session is done when the frontier is empty: every branch visited, nothing left silently assumed. Say so, state the shared understanding in a few lines, and wait for the user to confirm it before acting. That confirmation is the go.
+Each round of answers reshapes the tree: settled decisions push the frontier outward and unblock what depended on them. Recompute and ask the next round. The session is done when the frontier is empty: every branch visited, nothing left silently assumed. Say so, state the shared understanding in a few lines, and wait for the user to confirm it before acting. That confirmation is the go; do not ask for a second one, and if the user already approved the plan in this conversation, treat the last round of answers as the confirmation and proceed.
 
 Do not re-ask what the user already told you, in this conversation or in their standing preferences. Ask about what to build, not whether to build it.
 
 ## How to ask
 
-Number each question, give it a short title, spell out the choices, and give your recommended answer with the reason in one line. When a round is four questions or fewer and each has discrete choices, use the AskUserQuestion tool with the recommended option first. Otherwise write the round as numbered prose:
+Number each question, give it a short title, spell out the choices, and give your recommended answer with the reason in one line. Where the harness offers a structured question tool (AskUserQuestion in Claude Code), use it for a round of four questions or fewer with discrete choices, recommended option first. On a harness without one, or for a larger round, or for answers that need free text, write the round as numbered prose:
 
 ```
 Q1. <title>: <question, with the choices spelled out>
@@ -32,7 +32,7 @@ When a question needs a fact from the environment (a file, a config, a tool's re
 
 ## Signs it is working
 
-Disagreement, a recommendation the user overturns, a question that changes the shape of the work, a conclusion neither of you started with. Passivity (the user agreeing round after round) means the questions are too easy; ask about failure modes, who else is affected, what this looks like in six months, and what would make it not worth doing.
+Disagreement, a recommendation the user overturns, a question that changes the shape of the work, a conclusion neither of you started with. If the user agrees round after round, check whether any decision or risk is still unresolved (failure modes, who else is affected, what this looks like in six months, what would make it not worth doing); if nothing is, agreement has completed the intake, so stop asking.
 
 ## What it does not do
 
