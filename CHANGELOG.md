@@ -9,8 +9,8 @@ All notable changes to this repo are recorded here. Format follows Keep a Change
 - `worktree-isolation`: broadened the outside-git collision section to cover
   host ports and container names, `git add` in a shared checkout, and host RAM
   under concurrent full test suites; added a section on the guard refusing
-  cross-repo git and the stricter session-level EnterWorktree edges; documented
-  the pre-merge dirty-overlap check in `edge-recovery.md`.
+  git it cannot verify stays in the worktree and the session-level EnterWorktree
+  edges; documented the pre-merge dirty-overlap check in `edge-recovery.md`.
 - `briefing-subagents`: added briefing guidance for a lane that stops or
   restarts a live service, since a subagent can end between any two tool calls:
   lane-death-safe single-payload mutations and foreground long steps.
