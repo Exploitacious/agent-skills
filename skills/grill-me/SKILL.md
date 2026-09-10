@@ -17,7 +17,7 @@ Do not re-ask what the user already told you, in this conversation or in their s
 
 ## How to ask
 
-Number each question, give it a short title, spell out the choices, and give your recommended answer with the reason in one line. Where the harness offers a structured question tool (AskUserQuestion in Claude Code), use it for a round of four questions or fewer with discrete choices, recommended option first. On a harness without one, or for a larger round, or for answers that need free text, write the round as numbered prose:
+Number each question, give it a short title, spell out the choices, and give your recommended answer with the reason in one line. Where the active tool list offers a structured question tool, use it for a round of discrete-choice questions that fits the tool's own limit (four for AskUserQuestion in Claude Code, three for Codex's request_user_input, which is also mode-restricted), recommended option first. On a harness without one, for a round larger than the tool allows, or for answers that need free text, write the round as numbered prose:
 
 ```
 Q1. <title>: <question, with the choices spelled out>
