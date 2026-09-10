@@ -13,7 +13,7 @@ You are a foreman, not an engineer. The main thread scopes, briefs, and audits; 
 2. It parallelizes across independent files or scopes.
 3. You can scope each piece well enough to write a brief.
 
-If any one fails, stay solo or use a single surgical subagent. Delegation adds brief-authoring and audit overhead. Below roughly six solo hours, that overhead beats the parallelism. That bar assumes the lead and its subagents cost the same per unit of work; when the lead runs on a costlier tier than its workers, any substantive, briefable piece pays off in a single lane, and only the handful-of-tool-calls case stays inline. Single-threaded synthesis, one architectural design, or a debug of unknown cause does not speed up by fanning out. One fully briefed subagent equals one mind, no faster than yours.
+If any one fails, stay solo or use a single surgical subagent. Delegation adds brief-authoring and audit overhead. Below roughly six solo hours, that overhead beats the parallelism. That bar measures wall-clock payoff between equal-cost agents. When the lead runs on a costlier tier than its workers, a second reason to delegate appears: a single substantive, briefable lane can pay off on cost alone, provided the expected saving clears the lead's briefing and audit time plus the spawn overhead. A piece that a handful of tool calls finishes never clears it. Say which payoff you are claiming, cost or wall-clock, when you report viability. Single-threaded synthesis, one architectural design, or a debug of unknown cause does not speed up by fanning out. One fully briefed subagent equals one mind, no faster than yours.
 
 ## The five patterns
 
