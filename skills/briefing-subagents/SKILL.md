@@ -33,6 +33,13 @@ Guideline shape, not a gate. A missing section flags the audit, it does not abor
 
 Keep brief-authoring under a fifth of the expected subagent time. Past that you are in reviewer-fix territory, so do it yourself.
 
+## Briefing a lane that stops or restarts a live service
+
+A subagent can end between any two tool calls: it hits its turn cap, or a rate limit, with no chance to clean up. Two failure shapes follow from that, and both are the brief's job to prevent.
+
+- A stop, mutate, restart sequence split across calls is an outage waiting for the cap. If the lane ends after the stop, the service stays down until someone notices. Brief the lane to do the stop, the change, and the restart in one foreground payload, behind a trap that restores service on every exit, not only on error. Any single call that mutates live infrastructure should leave the system safe if the lane ends right after it.
+- A long step in the background is a lane parked forever. The background-Bash completion notice fires only for the main session, so a subagent that backgrounds a long command and ends its turn waiting on it is never re-invoked and idles with the service down. Brief every long step to run in the foreground with an adequate timeout, and to not end the turn between a stop and its restart. If a job must run in the background, keep it with the parent rather than a lane.
+
 ## On Codex and OpenCode
 
 The eight-section brief shape and the stakes-mode framing are provider-agnostic
