@@ -16,6 +16,10 @@ Delegation and verification:
 - `verifying-delegated-output`: check claims, git state, and content before you trust returned work.
 - `dynamic-workflows`: author a Claude Code dynamic workflow, or decide when a workflow beats manual delegation.
 
+Planning:
+
+- `grill-me`: interview the user in rounds, working a plan's decision tree until nothing is left open; adapted from mattpocock/skills `grilling` (MIT).
+
 Authoring:
 
 - `meta-skill-creator`: the doctrine and builder for writing portable single-job skills.

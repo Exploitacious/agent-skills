@@ -1,0 +1,39 @@
+---
+name: grill-me
+description: Interview the user in rounds until a plan, decision, or idea has no open questions left. Use at intake when a request has decisions the user has not made, before building anything non-trivial, or when the user says grill me, stress-test this, or poke holes in this.
+---
+
+# Grill me
+
+Interview the user until you share one understanding of what they want. Map the work as a decision tree: every decision branches into the decisions that hang off it.
+
+## Rounds and the frontier
+
+Work the tree in rounds. The frontier is every decision whose prerequisites are settled: the questions you can ask now without guessing at answers you have not heard. Ask the whole frontier in one round, then wait. A question whose answer depends on another question still open in this round belongs to a later round.
+
+Each round of answers reshapes the tree: settled decisions push the frontier outward and unblock what depended on them. Recompute and ask the next round. The session is done when the frontier is empty: every branch visited, nothing left silently assumed. Say so, state the shared understanding in a few lines, and wait for the user to confirm it before acting. That confirmation is the go.
+
+Do not re-ask what the user already told you, in this conversation or in their standing preferences. Ask about what to build, not whether to build it.
+
+## How to ask
+
+Number each question, give it a short title, spell out the choices, and give your recommended answer with the reason in one line. When a round is four questions or fewer and each has discrete choices, use the AskUserQuestion tool with the recommended option first. Otherwise write the round as numbered prose:
+
+```
+Q1. <title>: <question, with the choices spelled out>
+Recommended: <choice>, because <reason>.
+```
+
+No emojis, no filler. "I don't know" is a valid answer; record it as open and ask what would settle it.
+
+## Facts are your job, decisions are theirs
+
+When a question needs a fact from the environment (a file, a config, a tool's real behavior, a vendor limit), find it yourself: read the file, run the read-only command, or spawn an investigator lane. Never ask the user for something you could look up. A running lookup is an unsettled prerequisite: hold only the questions downstream of it and ask the rest of the frontier now. The decisions are the user's: put each to them and wait.
+
+## Signs it is working
+
+Disagreement, a recommendation the user overturns, a question that changes the shape of the work, a conclusion neither of you started with. Passivity (the user agreeing round after round) means the questions are too easy; ask about failure modes, who else is affected, what this looks like in six months, and what would make it not worth doing.
+
+## What it does not do
+
+It writes no files and leaves no workspace behind; the output is a sharper shared picture, usually captured in the plan that follows. It does not replace a written spec or design record for large work; hand the conversation to that step once the frontier is empty.
