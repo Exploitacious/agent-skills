@@ -20,6 +20,11 @@ Planning:
 
 - `grill-me`: interview the user in rounds, working a plan's decision tree until nothing is left open; adapted from mattpocock/skills `grilling` (MIT).
 
+Building and debugging:
+
+- `tdd`: build features or fix bugs test-first, one vertical slice at a time; vendored from mattpocock/skills (MIT).
+- `diagnosing-bugs`: a disciplined loop for hard bugs and performance regressions: reproduce, minimise, hypothesise, instrument, fix, regression-test; vendored from mattpocock/skills (MIT).
+
 Authoring:
 
 - `meta-skill-creator`: the doctrine and builder for writing portable single-job skills.
