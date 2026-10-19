@@ -2,6 +2,16 @@
 
 All notable changes to this repo are recorded here. Format follows Keep a Changelog; a release is a plugin version bump in `.claude-plugin/marketplace.json`.
 
+## [0.1.5] - 2026-10-19
+
+### Fixed
+
+- `tdd` and `diagnosing-bugs` now bundle the upstream MIT copyright and
+  permission notice as `LICENSE.upstream`, as `grill-me` already did. Their
+  READMEs pointed at this repository's LICENSE, which carries a different
+  copyright, so a per-skill copy or mount dropped the notice MIT requires.
+- `README.md` lists `tdd` and `diagnosing-bugs`, which shipped without an entry.
+
 ## [0.1.4] - 2026-09-10
 
 ### Changed
