@@ -1,6 +1,6 @@
 {
   "name": "agent-skills",
-  "version": "0.1.6",
+  "version": "0.1.7",
   "description": "Delegation, verification, and skill-authoring skills that load unmodified in any harness that scans a skills directory.",
   "license": "MIT",
   "skills": [

@@ -2,6 +2,16 @@
 
 All notable changes to this repo are recorded here. Format follows Keep a Changelog; a release is a plugin version bump in `.claude-plugin/marketplace.json`.
 
+## [0.1.7] - 2026-10-22
+
+### Fixed
+
+- `briefing-subagents` (`brief-template.md` worked example): the heavy-build
+  brief used names from an internal project (repo path, stakes line, table and
+  branch names). It is now a neutral order-history retention example for a
+  generic web service. Every instruction line is unchanged; only the names,
+  paths, and stakes wording differ, so the example teaches the same brief shape.
+
 ## [0.1.6] - 2026-10-22
 
 ### Changed
