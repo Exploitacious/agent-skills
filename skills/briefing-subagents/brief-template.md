@@ -35,13 +35,13 @@ A literal template the subagent fills in, as headings and bullets. Name every fi
 ## Worked example, heavy-build
 
 ```
-BRIEF: signal-history retention env-var override
+BRIEF: order-history retention env-var override
 
-Working dir: /path/to/finance-report
+Working dir: /path/to/orders-service
 Parent commit: 814db71 (main)
-Target branch: feat/signal-history-retention
+Target branch: feat/order-history-retention
 Do your branch work in your OWN git worktree; other sessions are live
-  in the shared checkout. Scratch dir: scratchpad/signal-retention/,
+  in the shared checkout. Scratch dir: scratchpad/order-retention/,
   yours alone; make any temp dir with mktemp -d and trap-remove only
   that exact path, never a glob. Do NOT push. Do NOT merge.
 
@@ -49,7 +49,7 @@ Files to read first:
 1. The distilled doctrine index (mandatory). This brief invokes the
    document-the-why, trust-and-audit, and best-effort-floor principles,
    plus the retention decision record.
-2. app/signals/retention.py
+2. app/orders/retention.py
 3. tests/test_retention.py
 4. docs/decisions/2026-05-18__retention-keep-forever.md
 
@@ -58,7 +58,7 @@ Deliverables:
 2. test_retention.py: 4 tests, default, override > 0, override 0 ignored,
    prune logging
 3. docs/decisions/2026-05-21__retention-env-override.md: decision record
-4. drift-check.sh: refuse ungated DELETE against signal_history
+4. drift-check.sh: refuse ungated DELETE against order_history
 
 Required tests: the 4 above.
 Governing principles:
@@ -86,17 +86,17 @@ Banned:
 - Pruning DELETE without the env-var gate.
 - "just" in comments or PR text.
 
-Stakes: production trading platform. 25-plus traders consult
-signal_history during market hours; a quiet prune would destroy the
-multi-year base-rate history the matcher depends on. This is a
-load-bearing safety mechanism.
+Stakes: production customer-facing web service. 25-plus support
+agents consult order_history during business hours; a quiet prune
+would destroy the multi-year order history the refund-matching job
+depends on. This is a load-bearing safety mechanism.
 
 Escalation grant: if a schema or environment gap would force a
 degraded version, defer the item and document the blocker as a
 follow-on. Do not ship the degradation.
 
 Report back:
-## Subagent report: signal-history retention override
+## Subagent report: order-history retention override
 Working dir / Branch / Commit SHAs
 ### Deliverables status (per item: done | partial | deferred, with files)
 ### Verification output (per command: PASS | FAIL with summary)
