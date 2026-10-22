@@ -2,6 +2,22 @@
 
 All notable changes to this repo are recorded here. Format follows Keep a Changelog; a release is a plugin version bump in `.claude-plugin/marketplace.json`.
 
+## [0.1.6] - 2026-10-22
+
+### Changed
+
+- `dynamic-workflows` (`authoring-workflows.md` Resume, `SKILL.md`): never
+  `SendMessage` an agent that is still running inside a workflow. The send
+  resumes a second copy from the lane's transcript while the workflow's own
+  instance keeps running, and both copies write one worktree. Put shared
+  decisions in the brief before launch, or stop the workflow and relaunch with
+  the decision; recovery is `TaskStop` on the workflow and each resumed agent id.
+- `worktree-isolation` (Scratchpad bullet) and `briefing-subagents`
+  (`brief-template.md` section 1 and the worked example): a lane's own temp
+  directory comes from `mktemp -d` with a trap that removes exactly that path;
+  never delete scratch by glob, since a parallel run's glob cleanup removed
+  sibling lanes' live temp directories.
+
 ## [0.1.5] - 2026-10-19
 
 ### Fixed

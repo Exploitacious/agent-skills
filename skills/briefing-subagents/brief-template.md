@@ -7,9 +7,9 @@ So the subagent knows its starting state and what not to push. Include the repo 
 
 Give any lane that will commit its own git worktree. Every session and subagent in a repo share one checkout, one HEAD, and one index, so a lane that checks out its branch in the shared tree moves your HEAD with it. Three consequences all seen live: a foreman commit meant for the main branch landed on a worker's branch; a foreman push reported "everything up-to-date" at exit 0 because the local ref never moved, so the commit looked pushed for half an hour; a second worker branching from the polluted HEAD inherited foreign commits into its PR ancestry. Worktree isolation on the spawn handles tool-launched lanes; any lane doing its own git work needs the sentence in the brief. Repairs are ref-only or done in a temp worktree, never a checkout in the shared tree.
 
-Give each lane its own scratch subdirectory, not just unique filenames. A session scratchpad is shared by the main thread and every subagent it spawns. Two lanes both wrote `scratchpad/pr-body.md` and one lane's in-place edits silently no-op'd against the other's content, nearly shipping the wrong PR body. Assign `scratchpad/<lane>/` per lane and require read-back before any scratch file is trusted as a source.
+Give each lane its own scratch subdirectory, not just unique filenames. A session scratchpad is shared by the main thread and every subagent it spawns. Two lanes both wrote `scratchpad/pr-body.md` and one lane's in-place edits silently no-op'd against the other's content, nearly shipping the wrong PR body. Assign `scratchpad/<lane>/` per lane and require read-back before any scratch file is trusted as a source. Tell a lane that makes its own temp directory to create it with `mktemp -d` and a trap that removes exactly that path, and never to clean up by glob: a parallel run's `rm -rf /dev/shm/*<tag>*` removed the live temp directories of its sibling lanes.
 
-Skipped, the failure is: pushes to the wrong branch, premature merge, an unclean starting tree, a moved peer HEAD, or a clobbered scratch file.
+Skipped, the failure is: pushes to the wrong branch, premature merge, an unclean starting tree, a moved peer HEAD, or a clobbered or deleted scratch file.
 
 ## Section 2: files to read first
 Lists paths in read order so the subagent does not rediscover structure. Three to ten paths, each with a one-line reason if non-obvious. Point at a distilled doctrine index plus the specific principle numbers this brief invokes, named by number, rather than a full-file doctrine read. A full doctrine file can run tens of KB; burying the six principles this brief needs inside it dilutes attention. Full reads are the escalation for genuinely doctrine-heavy lanes, not the default. Skipped, the subagent burns half an hour surveying the codebase before starting.
@@ -42,7 +42,8 @@ Parent commit: 814db71 (main)
 Target branch: feat/signal-history-retention
 Do your branch work in your OWN git worktree; other sessions are live
   in the shared checkout. Scratch dir: scratchpad/signal-retention/,
-  yours alone. Do NOT push. Do NOT merge.
+  yours alone; make any temp dir with mktemp -d and trap-remove only
+  that exact path, never a glob. Do NOT push. Do NOT merge.
 
 Files to read first:
 1. The distilled doctrine index (mandatory). This brief invokes the

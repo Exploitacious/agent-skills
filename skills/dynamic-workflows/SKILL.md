@@ -35,7 +35,7 @@ The canonical shape is find then verify, pipelined so each finding verifies the 
 
 A workflow is the same foreman discipline at scale, and the rules do not relax. Every `agent()` prompt is a stakes-mode brief: real user, named principles, verifiable done, banned shortcuts, escalation grant. Never compress an `agent()` prompt into shorthand; a compressed brief is a degraded brief. Returned findings are still claims, and the script's verify stage is the first defense, not the last; ground-truth the headline numbers before reporting. Default to the general, full-tool agent type. Use worktree isolation only when agents mutate files in parallel, and remember that a worktree cannot see gitignored or uncommitted context, so paste it inline. Workflows cannot ask the user mid-run, so for sign-off between stages, run each stage as its own workflow.
 
-Authoring detail, the args gotcha, resume, and worked patterns are in `authoring-workflows.md`.
+Authoring detail, the args gotcha, resume, and worked patterns are in `authoring-workflows.md`. Never `SendMessage` a lane that is still running: the send spawns a second copy that writes the same worktree (see Resume there for the safe pattern).
 
 ## On Codex and OpenCode
 
