@@ -36,12 +36,45 @@ Args can arrive undefined or stringified at the script even when the call passed
 - For a one-shot script, hardcode the inputs as a const literal in the body. Reserve args for genuinely parameterized saved workflows.
 - When you do use args, guard every access with a usable fallback, and have big payloads read from a file on disk by the agents (pass the path), not through args.
 - On failure, resume with the script path and the run id after patching the persisted script. Completed agents replay from cache, so a pre-flight args crash costs nothing.
+- Every script that reads args starts with the prelude below, before any other use of args. The failures it ends were `args.chains.map is not a function`, `LANES.map` on undefined and `rows.length` on a string, four crashes in two weeks, each before one agent ran.
+
+```javascript
+// Args prelude: args can be undefined, null, a JSON string (even the text "null"), or the wrong shape.
+const A = (() => {
+  let v = args
+  if (typeof v === 'string') { try { v = JSON.parse(v) } catch (e) { return {} } }
+  return v && typeof v === 'object' ? v : {}
+})()
+// list(): an array, or a JSON string holding one, else [].
+const list = (v) => {
+  if (typeof v === 'string') { try { v = JSON.parse(v) } catch (e) { return [] } }
+  return Array.isArray(v) ? v : []
+}
+const LANES = list(A.lanes)
+if (LANES.length === 0) {
+  log('args.lanes is missing or empty (args arrived as ' + typeof args + '); nothing to run')
+  return { error: 'no lanes in args', argsType: typeof args }
+}
+```
+
+  Read every other field the same way: `list(A.x)` for arrays, `String(A.x ?? '')` for text, `Number(A.n) || fallback` for numbers. Rename `lanes` to the field the script takes.
 
 ## Resume
 
 Runs are resumable within the same session: completed agent calls return cached results, edited or new calls run live. The tool persists each run's script to a file and returns the path. To iterate, edit that file and re-invoke with the path and the run id rather than resending the whole script. The same script and same args give a full cache hit.
 
 Never `SendMessage` an agent that is still running inside a workflow. A workflow lane is not a live agent you can address: the send is read as "resume this finished agent", answers `Resuming agent <id>`, and starts a second copy from the lane's transcript while the workflow's own instance keeps running. Both copies share one agent id, so neither can be addressed alone, and both write the same worktree, each rewriting or deleting the other's files. Put shared decisions in the brief before launch, or have one lane own a shared file and the other import it after it lands. If a decision must reach running lanes, stop the workflow (`TaskStop` on the workflow task) and relaunch with the decision in each brief, telling each lane to adopt its worktree's partial work. If a send already went out, `TaskStop` the workflow and every resumed agent id, then relaunch one agent per lane.
+
+## After a usage-limit hold or a crash
+
+A usage limit, a crash or a restart ends every running lane at the same second, and nothing says so: no task notification arrives, and the workflow never returns. Do not wait for it.
+
+1. Find the lanes that never returned. `wf-resume` does it (`.claude-config/bin/wf-resume` in a COWORK or OPS checkout): with no argument it lists this session's runs, `wf-resume <run id>` details one, and it exits 1 when a lane never returned. By hand, the journal is `subagents/workflows/<run id>/journal.jsonl` under the transcript directory the launch result named. A lane whose last row is `started`, with no later `result` or `failed`, never returned, and a lane transcript ending on "[Request interrupted by user]" is dead, not slow.
+2. Confirm the run is over before you touch it: the workflow task has ended and no lane has written in the last few minutes. A second copy of a live lane writes the same worktree.
+3. Read each dead lane's worktree: `git status` and `git log <base>..HEAD`. Partial commits and edits survive the stop; `wf-resume` prints both for every lane that worked in a linked worktree.
+4. Relaunch the persisted script with the run id (`{scriptPath, resumeFromRunId}`). Lanes that returned replay from cache and the dead lanes run live. Put a resume note in the dead lanes' prompts only, because editing a returned lane's prompt makes it miss the cache and run again: read your worktree's state first, keep sound work, never reset or stash it, push without force. If no lane returned, nothing replays and the resume is a full rerun.
+5. If you took a lane's branch over before resuming (fixes, review, a retest), finish or skip that lane in the script first. A resume re-runs any stage whose inputs changed, against the branch as it is now, so it can fix and retest a tree you are still reviewing.
+6. Do not `SendMessage` a lane to resume it (see Resume above); relaunch the script.
 
 ## Keep structured returns small
 

@@ -2,6 +2,21 @@
 
 All notable changes to this repo are recorded here. Format follows Keep a Changelog; a release is a plugin version bump in `.claude-plugin/marketplace.json`.
 
+## [0.1.9] - 2026-11-07
+
+### Changed
+
+- `dynamic-workflows` (`authoring-workflows.md`): every script that reads `args`
+  opens with an args prelude that accepts undefined, null, a JSON string or the
+  wrong shape and returns a clear error instead of crashing (four crashes in two
+  weeks, each before one agent ran: `args.chains.map is not a function`,
+  `LANES.map` on undefined, `rows.length` on a string). A new section, "After a
+  usage-limit hold or a crash", covers finding the lanes that never returned,
+  confirming the run is over, reading each dead lane's worktree, and relaunching
+  with `resumeFromRunId` so returned lanes replay from cache.
+- `dynamic-workflows` (`SKILL.md`): the description and the pointer paragraph
+  name the prelude and the recovery section.
+
 ## [0.1.8] - 2026-11-07
 
 ### Changed
