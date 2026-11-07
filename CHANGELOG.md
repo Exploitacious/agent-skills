@@ -2,6 +2,29 @@
 
 All notable changes to this repo are recorded here. Format follows Keep a Changelog; a release is a plugin version bump in `.claude-plugin/marketplace.json`.
 
+## [0.1.8] - 2026-11-07
+
+### Changed
+
+- `worktree-isolation` (`SKILL.md`): a sixth failure mode, resuming a lane whose
+  worktree is gone. An isolated lane that stops before writing anything has its
+  worktree reclaimed as unchanged, and a `SendMessage` resume then lands in the
+  shared checkout and moves it off main. Spawn a fresh lane instead, have the
+  brief commit a placeholder before any yield, and check the primary checkout's
+  branch after any resume. A new section covers cleanup after integration: audit
+  each worktree, pin reflog-only commits under a ref, remove without `--force`,
+  and why squash-landed lane worktrees survive branch cleanup tools.
+- `worktree-isolation` (`edge-recovery.md`): after resolving a merge conflict
+  that touches a shared file, `git diff HEAD -- <file>` must show only the
+  incoming lane's own changes, since an exact-text resolver drops a row both
+  sides edited; and the recovery for a branch still checked out by a finished
+  lane's worktree (`git switch --detach`).
+- `verifying-delegated-output` (`SKILL.md`): recovery when a lane ends on a
+  waiting line instead of a report. Read the branch, run your own gates, write
+  the report from the commits and say the builder ended without one, carry the
+  unfinished check into the landing check, and do not attribute a running host
+  process to the lane.
+
 ## [0.1.7] - 2026-10-22
 
 ### Fixed

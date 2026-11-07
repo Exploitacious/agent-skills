@@ -32,6 +32,16 @@ Verify each in a separate call before the merge chain, never chained inside it. 
 
 Depth per pattern and the triage for a failed audit are in `audit-checklist.md`.
 
+## When the lane returns a waiting line or no report
+
+A brief rule such as "never end on a waiting line" does not guarantee the final message. A build lane, including one inside a workflow, can still stop with "the test run is still going in the background; I'll wait for its completion notification". The background process belongs to the lane's session and dies with it: in one case the lane's test run died at 19% when the lane ended. The lane had already pushed four commits and left a clean tree. That message is a non-report, not a status update, and nothing in it is a claim you can audit. Prevention is in `briefing-subagents`; this is the recovery.
+
+1. Read the branch, not the message: whether the commits are on the remote, whether the tree is clean, what `git log` shows against the base.
+2. Run your own verification over the changed files: tests for the changed modules, lint, doc invariants, a secret scan. The lane's own checks did not finish, so count none of them as run.
+3. Write the report yourself from the commits, and say plainly in it that the builder ended without a report.
+4. Make sure the check the lane never finished, usually the long test set it was waiting on, runs in the landing check.
+5. Do not attribute a process still running on the host to the lane. The one found in that case belonged to another lane. Check its working directory and parent before you wait on it or kill it.
+
 ## Do not act on a line-specific finding without reading the source
 
 A reviewer reading a PR diff sees diff line numbers, not file line numbers, and they do not map one-to-one. A line-specific critical finding looks precise but is the highest-risk hallucination class: a reported "variable undefined at line 702" was defined at the top of that function, and applying the fix would have broken correct code. Before acting on any line-specific critical finding, open the actual file at that line and confirm. Pattern-level findings such as "this branch lacks error handling" stand on their merits and need no line check. If you cannot reproduce a finding in the source, it is hallucinated: ignore it and merge.
