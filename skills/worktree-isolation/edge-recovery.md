@@ -22,6 +22,11 @@ A shared checkout with concurrent sessions always has someone else's dirty files
 ## The folded shared signature
 When both sides of a conflict contain an identical line block, such as a common function signature or a `PRIMARY KEY (...)\n);` tail, git folds that block into the common region and splits one side's definition from its body. A naive "keep both" then yields broken code: a definition with no body, or a table that never closes. Physically reorder and rewrite the whole region; do not just delete the conflict markers.
 
+## After resolving a conflict: diff against HEAD
+A lane is cut from an older integration branch, so inside one conflict block the integration side may have deleted some rows, edited others, and kept the rest, while the lane edits different rows of its own. A quick resolver that keeps the lane's side minus the rows the integration side deleted matches rows by exact line equality, and a row both sides touched equals neither the base copy nor the lane's copy, so it silently vanishes. This happened in a shared backlog file: three rows sat in one conflict block, the integration side had also edited one of them, and the resolution dropped it. Nothing failed; only a grep for the row found it.
+
+Resolve from HEAD's block (the integration side) and apply the lane's per-row edits to it, matching rows by what identifies them (a date and topic, a key, an id) rather than by exact text. Before `git add`, run `git diff HEAD -- <file>`. It must show exactly the lane's intended row changes and nothing else; a removed line the lane did not mean to remove is a dropped row. This holds for any file many lanes edit, such as a backlog, an index, or a README. If the first pass was wrong, `git checkout -m <file>` recreates the conflict markers for another try.
+
 ## When the merge tail dominates the budget
 Parallel builds are cheap; landing them can be the expensive part. One round of five parallel workers built in about 90 minutes and took about five hours of serial rebases across roughly 50 conflict hunks to land. When features stack on the same anchors, either serialize the builds, or give each worker its own new module and defer the central wiring, such as schema registration and orchestration call sites, to one thin integration commit you write after all lanes land. Disjoint lanes parallelize for free; shared anchors do not.
 
@@ -33,3 +38,6 @@ When HEAD moved in a checkout another agent is also using:
 3. Redo your tracked edits there and copy the untracked new files over. Untracked files follow branch switches, so they are safe to move.
 
 Base the worktree on the remote main, not local main. Local main is often stale behind merged PRs.
+
+## A branch still checked out by a finished lane
+An isolated lane's branch stays checked out in its worktree after the lane ends, so `git switch <branch>` in any other worktree fails with "already used by worktree". When the lane has pushed and its tree is clean (check `git -C <lane-worktree> status --short`), free the branch with `git -C <lane-worktree> switch --detach`, then switch to it where you want it. A dirty tree means the lane did not finish; read what it left before you touch it.
