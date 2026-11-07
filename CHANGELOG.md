@@ -2,6 +2,16 @@
 
 All notable changes to this repo are recorded here. Format follows Keep a Changelog; a release is a plugin version bump in `.claude-plugin/marketplace.json`.
 
+## [0.1.10] - 2026-11-07
+
+### Changed
+
+- `diagnosing-bugs` (`SKILL.md`): the description now names its trigger as a
+  failing or slow command, test, or service whose cause is still unknown, and
+  says what it is not for (status updates, resume batons, reports that already
+  name the cause). The old wording ("reports something broken") matched ordinary
+  progress reports, so the skill was offered where no diagnosis was needed.
+
 ## [0.1.9] - 2026-11-07
 
 ### Changed
